@@ -214,7 +214,7 @@ Ogni video viene presentato con un player HTML5 incorporato.
 ![video](Cartella-sito/videocaricati.png)
 ### Gestione Canali (`canali.php`, `lista_canali.php`)
 
-Tramite **`canali.php`**![canali](Cartella-sito/canali.png) l’utente può accedere alla visualizzazione dei canali esistenti.  
+Tramite **`canali.php`**![canali](Cartella-sito/channels.png) l’utente può accedere alla visualizzazione dei canali esistenti.  
 `lista_canali.php`
 <div style="text-align: center;">
 	<img src="cartella-sito/listacanali.png" >
