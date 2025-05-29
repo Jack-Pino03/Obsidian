@@ -1,8 +1,8 @@
 #  Documentazione Tecnica del Progetto – CloudTube
 
-**Autore:** Jacopo Guerandi
-**Collaboratori**: Acampora Niccolò, Bassani Andrea, Cervadoro Ernesto, Monzani Tommaso, Panzera Federico, 
-**Tecnologie:** PHP, MySQL, JavaScript, CSS, HTML  
+**Autore:** Jacopo Guerandi<br>
+**Collaboratori**: Acampora Niccolò, Bassani Andrea, Cervadoro Ernesto, Monzani Tommaso, Panzera Federico<br>
+**Tecnologie:** PHP, MySQL, JavaScript, CSS, HTML<br>
 **Data:** Aprile-Maggio 2025
 
 ---
@@ -154,6 +154,37 @@ die("Errore di connessione al database: " . $e->getMessage());
 }
 
 ?>
+```
+Schema del Database
+
+Per chiarezza e per facilitare lo sviluppo futuro, si riporta una struttura base delle principali tabelle utilizzate nel database MySQL:
+
+```SQL
+CREATE TABLE utenti (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    password_hash VARCHAR(255) NOT NULL,
+    email VARCHAR(100) NOT NULL UNIQUE
+);
+
+CREATE TABLE canali (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    nome VARCHAR(50) NOT NULL,
+    descrizione TEXT,
+    proprietario_id INT,
+    FOREIGN KEY (proprietario_id) REFERENCES utenti(id)
+);
+
+CREATE TABLE video (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    titolo VARCHAR(100),
+    percorso_file VARCHAR(255),
+    canale_id INT,
+    utente_id INT,
+    data_caricamento DATETIME,
+    FOREIGN KEY (canale_id) REFERENCES canali(id),
+    FOREIGN KEY (utente_id) REFERENCES utenti(id)
+);
 ```
 ---
 
