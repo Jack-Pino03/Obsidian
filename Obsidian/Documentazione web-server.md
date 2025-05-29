@@ -1,8 +1,8 @@
 #  Documentazione Tecnica del Progetto – CloudTube
 
-**Autore:** Jacopo Guerandi
-**Collaboratori**: Acampora Niccolò, Bassani Andrea, Cervadoro Ernesto, Monzani Tommaso, Panzera Federico, 
-**Tecnologie:** PHP, MySQL, JavaScript, CSS, HTML  
+**Autore:** Jacopo Guerandi<br>
+**Collaboratori**: Acampora Niccolò, Bassani Andrea, Cervadoro Ernesto, Monzani Tommaso, Panzera Federico<br>
+**Tecnologie:** PHP, MySQL, JavaScript, CSS, HTML<br>
 **Data:** Aprile-Maggio 2025
 
 ---
