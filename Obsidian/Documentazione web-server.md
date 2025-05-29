@@ -195,30 +195,30 @@ die("Errore di connessione al database: " . $e->getMessage());
 Controlla se un utente ha una sessione attiva.  
 In caso contrario, viene eseguito un redirect automatico alla pagina di login (non inclusa nei file analizzati).  
 È una protezione basilare ma fondamentale per evitare accessi non autorizzati.
-![login](login.png)
+![login](Cartella-sito/login.png)
 ### Homepage (`home.php`)
 
 La homepage rappresenta il punto centrale del sito dopo l’accesso. Integra le funzionalità della sidebar, richiami a pagine come "Carica Video" o "Canali", e fornisce una struttura chiara all’utente autenticato.
-![home](home.png)
+![home](Cartella-sito/home.png)
 
 ###  Caricamento Video (`Upload.php`)
 
 Permette all’utente di caricare uno o più file video nel sistema.  
 Il file viene spostato nella directory ==**`uploads/`**== e può essere successivamente richiamato per la visualizzazione.  
 Vengono eseguiti controlli di validità sui file caricati per verificarne l’estensione e le dimensioni.
-![upload](upload.png)
+![upload](Cartella-sito/upload.png)
 ### Visualizzazione Video (`displayUploadedVideos.php`)
 
 Legge la cartella **`uploads/`** e genera dinamicamente la lista dei video presenti.  
 Ogni video viene presentato con un player HTML5 incorporato.
-![video](videocaricati.png)
+![video](Cartella-sito/videocaricati.png)
 ### Gestione Canali (`canali.php`, `lista_canali.php`)
 
-Tramite **`canali.php`**![canali](Channels.png) l’utente può accedere alla visualizzazione dei canali esistenti.  
+Tramite **`canali.php`**![canali](Cartella-sito/Channels.png) l’utente può accedere alla visualizzazione dei canali esistenti.  
 `lista_canali.php`
 <div style="text-align: center;">
-	<img src="cartella-sito/listacanali.png" >
-	<img src="cartella-sito/videosqlcodice.png">
+	<img src="Cartella-sito/listacanali.png" >
+	<img src="Cartella-sito/videosqlcodice.png">
 	</div>
 	
 si collega al database e visualizza dinamicamente i canali e i video associati.  
