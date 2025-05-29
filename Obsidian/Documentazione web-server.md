@@ -522,8 +522,8 @@ opacity: 0;
 ```
 ---
 <div style="page-break-after: always;"></div>
-## Configurazione e Requisiti
 
+## Configurazione e Requisiti
 
 <span style="color:rgb(66, 66, 99)">Per il corretto funzionamento del progetto sono necessari:</span>
 
