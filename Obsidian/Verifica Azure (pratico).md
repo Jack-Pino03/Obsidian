@@ -92,7 +92,7 @@ Verifica l’accesso via browser agli IP pubblici/DNS di ciascuna VM.
    - **SKU:** `Standard`
    - **Name:** `"inserire nome`
    - **IP Address:** `Statico`
-1. ==Associa il Load Balancer alla VNet creata.==
+3. Associa il Load Balancer alla VNet creata.
 
 ---
 
@@ -137,7 +137,6 @@ Per ogni VM:
   - **Action:** `Allow`
 
 ---
-<div style="page-break-after: always;"></div>
 
 ### 9. Test di Failover e Verifica
 
