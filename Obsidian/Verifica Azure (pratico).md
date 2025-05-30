@@ -1,202 +1,157 @@
-# Web App con Alta Disponibilità su Azure
-
-Autore: Jacopo Guerandi  
-Corso: Microsoft Azure  
-Data: Venerdì 30 Maggio 2025
-
+# Deploy di Web App ad Alta Disponibilità su Microsoft Azure
 ---
-
 ## Introduzione
 
-In ambienti cloud moderni è fondamentale garantire la disponibilità continua delle applicazioni, anche in caso di guasti o manutenzioni. Questo esercizio pratico mira a implementare un'infrastruttura in Azure in grado di erogare un'applicazione web semplice attraverso due macchine virtuali Linux configurate in alta disponibilità.
-
-Utilizzando un Azure Load Balancer, possiamo distribuire il traffico tra le VM attive e implementare un failover automatico: se una VM smette di rispondere, il traffico verrà automaticamente reindirizzato verso quella funzionante. Questo approccio è alla base della progettazione di sistemi resilienti e scalabili nel cloud.
-
----
+Questa guida illustra come implementare una soluzione di alta disponibilità per una web app su Azure sfruttando Load Balancer e macchine virtuali Linux. La documentazione segue un approccio step-by-step e si rivolge sia a chi sta studiando Azure sia a chi intende creare ambienti resilienti in cloud.
 
 ## Obiettivo
 
-Implementare un’architettura ad alta disponibilità per una web app su Azure, composta da:
+Realizzare un'infrastruttura Azure composta da:
+- Due VM Linux con web server Apache,
+- Load Balancer pubblico con health probe,
+- IP statico pubblico,
+- Regole di sicurezza e failover automatico.
 
-- Due macchine virtuali Linux con web server installato
-    
-- Load Balancer pubblico con health probe sulla porta 80
-    
-- DNS o IP pubblico raggiungibile
-    
-- Failover automatico in caso di guasto di una VM
-    
+## Prerequisiti
 
----
+- Sottoscrizione Azure attiva
+- Permessi di Contributor o superiore nella sottoscrizione
+- Familiarità con Azure Portal, SSH, e comandi di base Linux
 
-## 1. Creazione del Resource Group
+## Architettura di riferimento
 
-Da Azure Portal:
-
-- Nome: RG-WebAppHA
-    
-- Regione: East US (o altra disponibile)
-    
-
----
-
-## 2. Prima VM – macchinabrumbrum1
-
-- Immagine: Ubuntu Server 22.04 LTS
-    
-- Dimensione: B1s
-    
-- Autenticazione: chiave SSH
-    
-- Rete virtuale: VNet-WebApp
-    
-- Subnet: default
-    
-- IP pubblico: abilitato
-    
-- Porte aperte: 22 (SSH), 80 (HTTP)
-    
-- DNS name label: verificaazure.northeurope.cloudapp.azure.com (esempio)
-    
-
-Installazione Apache:
-
-bash
-
-CopiaModifica
-
-`sudo apt update sudo apt install apache2 -y echo "<h1>Web App Attiva - MACCHINA 1</h1>" | sudo tee /var/www/html/index.html`
-
-Verifica nel browser:
-
-http://verificaazure.northeurope.cloudapp.azure.com
+```mermaid
+graph TD
+    User --> LoadBalancer
+    LoadBalancer --> VM1[macchinabrumbrum1]
+    LoadBalancer --> VM2[macchinabrumbrum2]
+```
 
 ---
 
-## 3. Seconda VM – macchinabrumbrum2
+## Procedura dettagliata
 
-Creata con le stesse impostazioni della prima VM:
+### 1. Creazione del Resource Group
 
-- Stessa immagine, taglia, rete, porte
-    
-- Pagina web personalizzata:
-    
-
-bash
-
-CopiaModifica
-
-`echo "<h1>Web App Attiva - MACCHINA 2</h1>" | sudo tee /var/www/html/index.html`
+1. Accedi al Portale Azure.
+2. Vai su `"Resource Groups"` → `"Create"`.
+3. Imposta:
+   - **Name:** `"inserisci nome risorsa"`
+   - **Region:** `North Europe`
+1. Completa la creazione.
 
 ---
 
-## 4. Creazione del Load Balancer
+### 2. Provisioning delle Virtual Machine (VM)
 
-Dal Portale Azure:
+Per ciascuna VM (macchinabrumbrum1 e macchinabrumbrum2):
 
-- Tipo: Load Balancer Pubblico
-    
-- SKU: Standard
-    
-- Nome: LB-macchinabrumbrum
-    
-- IP pubblico: statico (creato durante la procedura)
-    
-    - Nome IP pubblico: ip-lb-brumbrum
-        
+- **OS:** `Ubuntu Server 22.04 LTS`  
+- **Size:** `B1s ` 
+- **Authentication:** `Password`  
+- **Virtual Network:** `VNet-WebApp`
+- **Subnet:** `default`
+- **Public IP:**` Statico, abilitato`  
+- **Ports:** `22 (SSH), 80 (HTTP) ` 
+- **DNS label:** `"nome a scelta".northeurope.cloudapp.azure.com`
 
 ---
 
-## 5. Backend Pool
+### 3. Installazione Web Server sulle VM
 
-- Nome: brumbrum-pool
-    
-- VM aggiunte: macchinabrumbrum1, macchinabrumbrum2
-    
-- Rete: VNet-WebApp
-    
-- Nic: interfacce delle due VM
-    
+Accedi via SSH a ciascuna VM:
 
----
+**macchinabrumbrum1**
+```bash
+sudo apt update && apt upgrade -y
+sudo apt install apache2 -y
+echo "<h1>Web App Attiva - MACCHINA 1</h1>" | sudo tee /var/www/html/index.html
+```
 
-## 6. Health Probe
+**macchinabrumbrum2**
+```bash
+sudo apt update && apt upgrade -y
+sudo apt install apache2 -y
+echo "<h1>Web App Attiva - MACCHINA 2</h1>" | sudo tee /var/www/html/index.html
+```
 
-- Nome: http-probe
-    
-- Protocollo: HTTP
-    
-- Porta: 80
-    
-- Percorso: /
-    
-- Intervallo: 5 sec
-    
-- Failures tollerate: 2
-    
+Verifica l’accesso via browser agli IP pubblici/DNS di ciascuna VM.
 
 ---
 
-## 7. Regola di Bilanciamento
+### 4. Configurazione del Load Balancer
 
-- Nome: web-rule
-    
-- Porta frontend: 80
-    
-- Porta backend: 80
-    
-- Backend Pool: brumbrum-pool
-    
-- Health Probe: http-probe
-    
-- Session persistence: Nessuna
-    
+1. Vai su `"Create a resource"` → `"Networking"` → `"Load Balancer"`.
+2. Imposta:
+   - **Type:** `Public`
+   - **SKU:** `Standard`
+   - **Name:** `"inserire nome`
+   - **IP Address:** `Statico`
+3. Associa il Load Balancer alla VNet creata.
 
 ---
 
-## 8. Regole di Sicurezza (NSG)
+### 5. Configurazione dei Backend Pool
 
-Per entrambe le VM:
-
-- Regola in entrata:
-    
-    - Nome: allow-http
-        
-    - Porta: 80
-        
-    - Protocollo: TCP
-        
-    - Origine: Any
-        
-    - Azione: Allow
-        
+- **Name:** `"inserisci nome"`
+- **Aggiungi:** `la-prima-macchina, la-seconda-macchina` 
+- **Network:** `VNet-WebApp`
 
 ---
 
-## 9. Test del Failover
+### 6. Configurazione Health Probe
 
-- Aprire nel browser: http://<IP_statico_del_LoadBalancer>
-    
-- Spegnere una delle VM
-    
-- Attendere 15-30 secondi
-    
-- Ricaricare il browser: il traffico viene inoltrato alla VM attiva
-    
+- **Name:** `"inserisci nome"`
+- **Protocol:** `HTTP`
+- **Port:** `80`
+- **Path:** `/`
+- **Interval:** `5s`
+- **Unhealthy Threshold:** `2`
 
 ---
 
-## Conclusioni
+### 7. Regole di Bilanciamento
 
-L'infrastruttura realizzata permette di sperimentare una soluzione cloud resiliente con:
+- **Name:** `"inserisci nome"`
+- **Frontend port:** `80`
+- **Backend port:** `80`
+- **Backend pool:** `Inserisci la backend-pool creata in precedenza`
+- **Health probe:** -[`Inserisci la probe creata in precedenza`](6.-configurazione-health-probe)
+- **Session persistence:** `None`
 
-- Accessibilità pubblica da Internet
-    
-- Distribuzione del carico tra due VM Linux
-    
-- Failover automatico gestito dal Load Balancer
-    
-- Indirizzo IP statico pubblico raggiungibile
-    
+---
 
-Questo tipo di architettura costituisce la base per applicazioni mission-critical, ambienti di test robusti e distribuzioni su larga scala in ambienti Azure.
+### 8. Configurazione Network Security Group (NSG)
+
+Per ogni VM:
+- **Inbound Rule:**  
+  - **Name:** allow-http  
+  - **Port:** 80  
+  - **Protocol:** TCP  
+  - **Source:** Any  
+  - **Action:** Allow  
+
+---
+
+### 9. Test di Failover e Verifica
+
+1. Accedi a `http://<IP_statico_del_LoadBalancer>` dal browser.
+2. Spegni una delle due VM dal portale Azure.
+3. Dopo 15-30 secondi, aggiorna il browser: il traffico sarà servito dalla VM attiva.
+4. Riaccendi la VM spenta e verifica il ritorno del traffico bilanciato.
+
+---
+
+## Best Practice e Automazione
+
+- **Automazione:**  
+  Utilizza Azure CLI, ARM Template o Bicep per rendere ripetibile il deployment.
+- **Sicurezza:**  
+  Limita l’accesso SSH tramite IP specifici e valuta l’uso di Azure Bastion.
+- **Monitoraggio:**  
+  Abilita Azure Monitor e Log Analytics per verificare lo stato delle VM e del Load Balancer.
+- **Scalabilità:**  
+  Considera l’uso di Virtual Machine Scale Set per ambienti di produzione.
+
+---
+**Autore:** Jacopo Guerandi
