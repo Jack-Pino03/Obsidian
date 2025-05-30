@@ -70,6 +70,11 @@ echo "<h1>Web App Attiva - MACCHINA 2</h1>" | sudo tee /var/www/html/index.html
 
 Verifica l’accesso via browser agli IP pubblici/DNS di ciascuna VM.
 
+| VM1                                      | VM2                                       |
+| ---------------------------------------- | ----------------------------------------- |
+| ![macchina1](Cartella-sito/macchina1png) | ![macchina2](Cartella-sito/macchina2.png) |
+|                                          |                                           |
+
 ---
 
 ### 4. Configurazione del Load Balancer
