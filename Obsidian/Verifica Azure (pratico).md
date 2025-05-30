@@ -11,13 +11,6 @@ Realizzare un'infrastruttura Azure composta da:
 - Load Balancer pubblico con health probe,
 - IP statico pubblico,
 - Regole di sicurezza e failover automatico.
-
-## Prerequisiti
-
-- Sottoscrizione Azure attiva
-- Permessi di Contributor o superiore nella sottoscrizione
-- Familiarità con Azure Portal, SSH, e comandi di base Linux
-
 ## Architettura di riferimento
 
 ```mermaid
@@ -99,7 +92,7 @@ Verifica l’accesso via browser agli IP pubblici/DNS di ciascuna VM.
 
 ---
 
-### 6. Configurazione Health Probe
+### 6. Configurazione HealthProbe
 
 - **Name:** `"inserisci nome"`
 - **Protocol:** `HTTP`
@@ -116,7 +109,7 @@ Verifica l’accesso via browser agli IP pubblici/DNS di ciascuna VM.
 - **Frontend port:** `80`
 - **Backend port:** `80`
 - **Backend pool:** `Inserisci la backend-pool creata in precedenza`
-- **Health probe:** -[`Inserisci la probe creata in precedenza`](6.-configurazione-health-probe)
+- **Health probe:** `Inserisci la probe creata in precedenza`
 - **Session persistence:** `None`
 
 ---
@@ -125,11 +118,11 @@ Verifica l’accesso via browser agli IP pubblici/DNS di ciascuna VM.
 
 Per ogni VM:
 - **Inbound Rule:**  
-  - **Name:** allow-http  
-  - **Port:** 80  
-  - **Protocol:** TCP  
-  - **Source:** Any  
-  - **Action:** Allow  
+  - **Name:** `allow-http`
+  - **Port:** `80`  
+  - **Protocol:** `TCP`
+  - **Source:** `Any`
+  - **Action:** `Allow`
 
 ---
 
@@ -139,19 +132,6 @@ Per ogni VM:
 2. Spegni una delle due VM dal portale Azure.
 3. Dopo 15-30 secondi, aggiorna il browser: il traffico sarà servito dalla VM attiva.
 4. Riaccendi la VM spenta e verifica il ritorno del traffico bilanciato.
-
----
-
-## Best Practice e Automazione
-
-- **Automazione:**  
-  Utilizza Azure CLI, ARM Template o Bicep per rendere ripetibile il deployment.
-- **Sicurezza:**  
-  Limita l’accesso SSH tramite IP specifici e valuta l’uso di Azure Bastion.
-- **Monitoraggio:**  
-  Abilita Azure Monitor e Log Analytics per verificare lo stato delle VM e del Load Balancer.
-- **Scalabilità:**  
-  Considera l’uso di Virtual Machine Scale Set per ambienti di produzione.
 
 ---
 **Autore:** Jacopo Guerandi
