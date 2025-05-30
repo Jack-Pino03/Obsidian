@@ -1,8 +1,15 @@
 # Deploy di Web App ad Alta Disponibilità su Microsoft Azure
 ---
+
+<font color="#4bacc6">Autore: Jacopo Guerandi  </font>
+<font color="#4bacc6">Corso: Microsoft Azure  </font>
+<font color="#4bacc6">Data: Venerdì 30 Maggio 2025</font>
+
+---
 ## Introduzione
 
-Questa guida illustra come implementare una soluzione di alta disponibilità per una web app su Azure sfruttando Load Balancer e macchine virtuali Linux. La documentazione segue un approccio step-by-step e si rivolge sia a chi sta studiando Azure sia a chi intende creare ambienti resilienti in cloud.
+In ambienti cloud moderni è fondamentale garantire la disponibilità continua delle applicazioni, anche in caso di guasti o manutenzioni. 
+Utilizzando un **Azure Load Balancer**, possiamo distribuire il traffico tra le VM attive e implementare un **failover** automatico: se una VM smette di rispondere, il traffico verrà automaticamente reindirizzato verso quella funzionante. Questo approccio è alla base della progettazione di sistemi resilienti e scalabili nel cloud.
 
 ## Obiettivo
 
@@ -30,7 +37,7 @@ graph TD
 2. Vai su `"Resource Groups"` → `"Create"`.
 3. Imposta:
    - **Name:** `"inserisci nome risorsa"`
-   - **Region:** `North Europe`
+   - **Region:** `North Europe (o uno a scelta)`
 1. Completa la creazione.
 
 ---
@@ -41,7 +48,7 @@ Per ciascuna VM (macchinabrumbrum1 e macchinabrumbrum2):
 
 - **OS:** `Ubuntu Server 22.04 LTS`  
 - **Size:** `B1s ` 
-- **Authentication:** `Password`  
+- **Authentication:** `Password o SSH`  
 - **Virtual Network:** `VNet-WebApp`
 - **Subnet:** `default`
 - **Public IP:**` Statico, abilitato`  
@@ -54,26 +61,26 @@ Per ciascuna VM (macchinabrumbrum1 e macchinabrumbrum2):
 
 Accedi via SSH a ciascuna VM:
 
-**macchinabrumbrum1**
+**Macchina n1**
 ```bash
 sudo apt update && apt upgrade -y
 sudo apt install apache2 -y
-echo "<h1>Web App Attiva - MACCHINA 1</h1>" | sudo tee /var/www/html/index.html
+echo "<h1>["inserire un contenuto a scelta come test"]</h1>" | sudo tee /var/www/html/index.html
 ```
 
-**macchinabrumbrum2**
+**Macchina n2**
 ```bash
 sudo apt update && apt upgrade -y
 sudo apt install apache2 -y
-echo "<h1>Web App Attiva - MACCHINA 2</h1>" | sudo tee /var/www/html/index.html
+echo "<h1>["inserire un contenuto a scelta come test"]</h1>" | sudo tee /var/www/html/index.html
 ```
 
 Verifica l’accesso via browser agli IP pubblici/DNS di ciascuna VM.
 
-| VM1                                      | VM2                                       |
-| ---------------------------------------- | ----------------------------------------- |
-| ![macchina1](Cartella-sito/macchina1png) | ![macchina2](Cartella-sito/macchina2.png) |
-|                                          |                                           |
+| VM1                                       | VM2                                       |
+| ----------------------------------------- | ----------------------------------------- |
+| ![macchina1](Cartella-sito/macchina1.png) | ![macchina2](Cartella-sito/macchina2.png) |
+| **Accesso:** `indirizzo ip`               | **Accesso:** `DNS`                        |
 
 ---
 
@@ -85,7 +92,7 @@ Verifica l’accesso via browser agli IP pubblici/DNS di ciascuna VM.
    - **SKU:** `Standard`
    - **Name:** `"inserire nome`
    - **IP Address:** `Statico`
-3. Associa il Load Balancer alla VNet creata.
+1. ==Associa il Load Balancer alla VNet creata.==
 
 ---
 
@@ -130,6 +137,7 @@ Per ogni VM:
   - **Action:** `Allow`
 
 ---
+<div style="page-break-after: always;"></div>
 
 ### 9. Test di Failover e Verifica
 
@@ -139,4 +147,3 @@ Per ogni VM:
 4. Riaccendi la VM spenta e verifica il ritorno del traffico bilanciato.
 
 ---
-**Autore:** Jacopo Guerandi
